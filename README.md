@@ -13,7 +13,7 @@ You can set your cursor to the begining or end of any word (or text chunk) on th
 Description
 ---------------------------
 
-After you type a keyboard shortcut (default is `ctrl+;`) an input field is opened. First character you type launches function which searches for all text chunks containing this character. Then it labels all found occurences. Next letter(s) is label you want to jump to. If you then press enter the cursor will be there. If you want to select target word just type plus sign (+) before hiting the enter. You can also jump to the end of the word by appending dollar sign ($).
+After you type a keyboard shortcut (default is `ctrl+;`) an input field is opened. First character you type launches function which searches for all text chunks containing this character. Then it labels all found occurences. Next letter(s) is label you want to jump to. If you then press enter the cursor will be there. If you want to select target word just type plus sign (`+`) before hiting the enter. You can also jump to the end of the word by appending dollar sign (`$`).
 
 Notice that current plugin status is indicated in status bar.
 
@@ -31,6 +31,12 @@ Modifiers:
 - no modifier - place cursor at the begining of the word
 - `$`, `.`    - pace cursor at the end of the word
 - `+`, `,`    - select word
+
+How to install
+--------------
+
+Just put AceJump folder to Packages directory of ST2
+(Preferences > Browse Packages)
 
 Thoughts
 --------

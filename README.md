@@ -8,7 +8,7 @@ It's inspired by AceJump for JetBrains WebStorm (inspired by emacs AceJump, whic
 Possibilities
 ------------
 
-You can set your cursor to the begining or end of any word (or text chunk) on the screen. You can also select this word (like ctrl+d).
+With just one keyboard shortcut and two typed letters you can set your cursor to the begining or end of any word (or text chunk) on the screen. You can also select this word (like ctrl+d).
 
 Description
 ---------------------------

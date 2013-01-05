@@ -8,12 +8,12 @@ It's inspired by AceJump for JetBrains WebStorm (inspired by emacs AceJump, whic
 Possibilities
 ------------
 
-With just one keyboard shortcut and two typed letters you can set your cursor to the begining or end of any word (or text chunk) on the screen. You can also select this word (like ctrl+d).
+With just one keyboard shortcut and two typed letters you can set your cursor to the begining or end of any word (or text chunk) on the screen. You can also select this word (like `ctrl+d`).
 
 Description
 ---------------------------
 
-After you type a keyboard shortcut (default is `ctrl+;`) an input field is opened. First character you type launches function which searches for all text chunks containing this character. Then it labels all found occurences. Next letter(s) is label you want to jump to. If you then press enter the cursor will be there. If you want to select target word just type plus sign (`+`) before hiting the enter. You can also jump to the end of the word by appending dollar sign (`$`).
+After you type a keyboard shortcut (default is `ctrl+;`) an input field is opened. First character you type launches function which searches for all text chunks containing this character. Then it labels all found occurences. Next letter(s) you type are interpeted as label you want jump to. If you then press enter the cursor will be before your label. If you want to select target word just type plus sign (`+`) before hiting the enter. You can also jump to the end of the word by appending dollar sign (`$`).
 
 Notice that current plugin status is indicated in status bar.
 

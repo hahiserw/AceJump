@@ -50,4 +50,4 @@ I used
 tl;dr
 -----
 
-Press `ctrl+;`, type first character, and another, `<enter>`, profit.
+Press `ctrl+;`, type first character, letter, `<enter>`, profit.

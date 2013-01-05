@@ -65,11 +65,13 @@ class AceJumpCommand(sublime_plugin.WindowCommand):
 				self.unlabel_words()
 			return
 		if len(command) == 1:
+			# Just first character
 			self.char = command
 			self.view.set_status("AceJump", "Selected character: '%s', input target label" % self.char)
 			if not self.labels:
 				self.search_and_label_words()
 		if len(command) > 1:
+			# Label (and modifers)
 			self.target = command[1:]
 			self.view.set_status("AceJump", "Target: %s" % self.target)
 
@@ -79,9 +81,9 @@ class AceJumpCommand(sublime_plugin.WindowCommand):
 		self.view.erase_status("AceJump")
 		sublime.status_message("AceJump: Cancelled")
 
-	# Searches for all words with given regexp in current view
-	# I used view.find to search in given region (to controll when to stop searching for words)
 	def get_all_visible_words(self, expression):
+		# Searches for all words with given regexp in current view
+		# I used view.find to search in given region (to control when to stop searching for words)
 		# Contain words regions, so we can use entire region, or just one position
 		words = []
 		# Find occurences in this region
@@ -165,7 +167,7 @@ class JumpToRegionCommand(sublime_plugin.TextCommand):
 		self.view.show(region)
 
 
-class JumpToPlace(sublime_plugin.TextCommand):
+class JumpToPlaceCommand(sublime_plugin.TextCommand):
 
 	def run(self, edit, start):
 		# Should I do checking for correct number?

@@ -1,6 +1,6 @@
 import sublime, sublime_plugin
 from string import uppercase
-from re import search, escape
+from re import search, match, escape
 
 
 hints_letters = uppercase
@@ -40,8 +40,10 @@ What are we gonna do here? (function activated)
 class AceJumpCommand(sublime_plugin.WindowCommand):
 
 	def run(self):
+		# Todo: Add settings
 		# Some base variables
 		self.view = self.window.active_view()
+		self.words = []
 		self.char = ""
 		self.target = ""
 		self.labels = False
@@ -63,11 +65,11 @@ class AceJumpCommand(sublime_plugin.WindowCommand):
 			# If user entered text, deleted it and started over
 			if self.labels:
 				self.unlabel_words()
+			self.view.set_status("AceJump", "Type target character")
 			return
 		if len(command) == 1:
 			# Just first character
 			self.char = command
-			self.view.set_status("AceJump", "Selected character: '%s', input target label" % self.char)
 			if not self.labels:
 				self.search_and_label_words()
 		if len(command) > 1:
@@ -89,7 +91,8 @@ class AceJumpCommand(sublime_plugin.WindowCommand):
 		# Find occurences in this region
 		visible_region = self.view.visible_region()
 		next_search = visible_region.begin()
-		while next_search < visible_region.end():
+		last_search = visible_region.end()
+		while next_search < last_search:
 			# find_all searches in entire file and we don't want this
 			word = self.view.find(expression, next_search)
 			if word:
@@ -102,23 +105,81 @@ class AceJumpCommand(sublime_plugin.WindowCommand):
 	def search_and_label_words(self):
 		# Todo: One letter labels closer to current position
 		# Escape special characters, you can search them too!
+		hints = []
+		visible_region = self.view.visible_region()
+		next_search = visible_region.begin()
+		last_search = visible_region.end()
+		# label A is nr 1, not 0
+		index = 1
+		self.words = []
+		self.edit = self.view.begin_edit("AceJumpHints")
+		while next_search < last_search:
+			word = self.view.find(selection_regex % escape(self.char), next_search)
+			if word:
+				self.words.append(word)
+				label = number_to_letters(index)
+				label_length = len(label)
+				hint_region = sublime.Region( word.begin(), word.begin() + label_length)
+				# Don't replace line ending with label
+				if label_length > 1 and match(r'$', self.view.substr(word.begin() + label_length - 1)):
+					replace_region = sublime.Region(word.begin(), word.begin() + 1)
+				else:
+					replace_region = hint_region
+				self.view.replace(self.edit, replace_region, label)
+				hints.append(hint_region)
+				index += 1
+			else:
+				break
+			next_search = word.end()
+		matches = len(self.words)
+		if not matches:
+			self.view.set_status("AceJump", "No matches found")
+			return
+		self.labels = True
+		# Which scope use here, string?
+		# comment, string
+		self.view.add_regions("AceJumpHints", hints, "string")
+		self.view.set_status(
+			"AceJump", "Found %d match%s for character %s"
+			% (matches, "es" if matches > 1 else "", self.char)
+		)
+
+	def search_and_label_words_old(self):
+		# Todo: One letter labels closer to current position
+		# Escape special characters, you can search them too!
 		self.words = self.get_all_visible_words(selection_regex % escape(self.char))
 		matches = len(self.words)
 		if not matches:
 			self.view.set_status("AceJump", "No matches found")
 			return
-		self.view.set_status("AceJump", "Found %d match%s" % (matches, "es" if matches > 1 else ""))
+		self.view.set_status(
+			"AceJump", "Found %d match%s for character %s"
+			% (matches, "es" if matches > 1 else "", self.char)
+		)
 		self.labels = True
 		hints = []
-		index = 1 # label A is nr 1, not 0
+		# label A is nr 1, not 0
+		index = 1
+		# If label is added at the end of the line one character is added,
+		# so new line character is not replaced. Because of that
+		# succeeding regions' values are shifted by one unit to the left
+		offset = 0
 		self.edit = self.view.begin_edit("AceJumpHints")
 		for word in self.words:
 			label = number_to_letters(index)
-			region = sublime.Region(word.begin(), word.begin() + len(label))
+			label_length = len(label)
+			region = sublime.Region(word.begin(), word.begin() + label_length)
+			# Don't replace line ending with label
+			if label_length > 1 and match(r'$', self.view.substr(word.begin() + label_length - 1)):
+				replace_region = sublime.Region(word.begin() , word.begin() + 1)
+				offset += 1
+			else:
+				replace_region = region
+			self.view.replace(self.edit, replace_region, label)
 			hints.append(region)
-			self.view.replace(self.edit, region, label)
 			index += 1
 		# Which scope use here, string?
+		# comment, string
 		self.view.add_regions("AceJumpHints", hints, "string")
 
 	def unlabel_words(self):
@@ -149,7 +210,7 @@ class AceJumpCommand(sublime_plugin.WindowCommand):
 			return
 		sublime.status_message(
 			"Search key: %s, go to: %s%s"
-			% (self.char, label, ", no such modifier, just jumping" if modifier else "")
+			% (self.char, label, "" if not modifier else ", no such modifier, just jumping")
 		)
 		self.view.run_command("jump_to_place", {"start": region.begin()})
 

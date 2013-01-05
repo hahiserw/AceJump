@@ -41,7 +41,7 @@ Just put AceJump folder to Packages directory of ST2
 Thoughts
 --------
 
-I did it that way, because that's all about I found about Sublime Text 2 API.
+I did it that way, because that's all I found about Sublime Text 2 API.
 I used
 - Window.show_input_panel to collect user input
 - View.replace, View.add_regions and command undo to impement labels
@@ -50,4 +50,4 @@ I used
 tl;dr
 -----
 
-Press keyboard shortcut, type first character, and another, `<enter>`, profit.
+Press `ctrl+;`, type first character, and another, `<enter>`, profit.

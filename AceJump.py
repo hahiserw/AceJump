@@ -6,8 +6,8 @@ from re import search, escape
 hints_letters = uppercase
 hints_letters_length = len(hints_letters)
 
-# selection_regex = r'(?=\S)%s\S*'
-selection_regex = r'\b%s\S*'
+selection_regex = r'(?=\S)%s\S*'
+# selection_regex = r'\b%s\S*'
 
 
 def number_to_letters(number):

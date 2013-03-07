@@ -93,6 +93,8 @@ class AceJumpCommand(sublime_plugin.WindowCommand):
 		sublime.status_message("AceJump: Cancelled")
 
 	def search_and_label_words(self):
+		# http://www.sublimetext.com/docs/2/api_reference.html
+		# http://docs.python.org/2/library/re.html
 		# Todo: One letter labels closer to current position
 		# Searches for all words with given regexp in current view and labels them
 		# Contain words regions, so we can use entire region, or just one position
@@ -117,14 +119,18 @@ class AceJumpCommand(sublime_plugin.WindowCommand):
 				# Don't replace line ending with label
 				if label_length > 1 and match(r'$', self.view.substr(word.begin() + label_length - 1)):
 					replace_region = sublime.Region(word.begin(), word.begin() + 1)
+					print "not replacing line ending", label
 				else:
 					replace_region = hint_region
 				self.view.replace(self.edit, replace_region, label)
 				hints.append(hint_region)
 				index += 1
+				# print index, label
 			else:
+				print "no words left", next_search, last_search
 				break
 			next_search = word.end()
+		print "no search area left", next_search, last_search
 		matches = len(self.words)
 		if not matches:
 			self.view.set_status("AceJump", "No matches found")
@@ -133,6 +139,7 @@ class AceJumpCommand(sublime_plugin.WindowCommand):
 		# Which scope use here, string?
 		# comment, string
 		self.view.add_regions("AceJumpHints", hints, "string")
+		self.view.add_regions("AceJumpWords", self.words, "comment") # Will be: Enable with settings
 		self.view.set_status(
 			"AceJump", "Found %d match%s for character %s"
 			% (matches, "es" if matches > 1 else "", self.char)
@@ -142,10 +149,14 @@ class AceJumpCommand(sublime_plugin.WindowCommand):
 		# Erase hints and undo labels in the fine
 		self.labels = False
 		self.view.erase_regions("AceJumpHints")
+		self.view.erase_regions("AceJumpWords")
 		self.view.end_edit(self.edit)
 		self.view.run_command("undo")
 
 	def jump(self):
+		# Todo: Last jump position, so you can jump back with one letter shortcut
+		# Todo: Settings: add default jump mode
+		# Todo: Add select_to modifier
 		# Get label and modifier
 		result = search(r'(\w+)(.?)', self.target)
 		if result:

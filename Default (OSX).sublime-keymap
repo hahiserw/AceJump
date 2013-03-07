@@ -1,0 +1,3 @@
+[
+	{ "keys": ["super+ctrl+;"], "command": "ace_jump" }
+]

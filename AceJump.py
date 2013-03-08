@@ -119,7 +119,7 @@ class AceJumpCommand(sublime_plugin.WindowCommand):
 				# Don't replace line ending with label
 				if label_length > 1 and match(r'$', self.view.substr(word.begin() + label_length - 1)):
 					replace_region = sublime.Region(word.begin(), word.begin() + 1)
-					print "not replacing line ending", label
+					# print "not replacing line ending", label
 				else:
 					replace_region = hint_region
 				self.view.replace(self.edit, replace_region, label)
@@ -127,10 +127,10 @@ class AceJumpCommand(sublime_plugin.WindowCommand):
 				index += 1
 				# print index, label
 			else:
-				print "no words left", next_search, last_search
+				# print "no words left", next_search, last_search
 				break
 			next_search = word.end()
-		print "no search area left", next_search, last_search
+		# print "no search area left", next_search, last_search
 		matches = len(self.words)
 		if not matches:
 			self.view.set_status("AceJump", "No matches found")
@@ -188,7 +188,7 @@ class JumpToRegionCommand(sublime_plugin.TextCommand):
 
 	def run(self, edit, start, end):
 		# Checking? try/except
-		region = sublime.Region(start, end)
+		region = sublime.Region(long(start), long(end))
 		if not region:
 			print "JumpToRegion: Bad region!"
 			return

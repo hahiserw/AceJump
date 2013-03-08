@@ -202,5 +202,5 @@ class JumpToPlaceCommand(sublime_plugin.TextCommand):
 	def run(self, edit, start):
 		# Should I do checking for correct number?
 		self.view.sel().clear()
-		self.view.sel().add(sublime.Region(start))
-		self.view.show(start)
+		self.view.sel().add(sublime.Region(long(start)))
+		self.view.show(long(start))

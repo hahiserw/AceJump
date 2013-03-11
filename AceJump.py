@@ -6,7 +6,7 @@ from re import search, match, escape
 hints_letters = uppercase
 hints_letters_length = len(hints_letters)
 
-selection_regex = r'(?=\S)%s\S*'
+selection_regex = r'(\b\w+|)(?=%s)((\B\w+)|\w+)'
 # selection_regex = r'\b%s\S*'
 
 

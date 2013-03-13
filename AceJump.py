@@ -188,7 +188,7 @@ class JumpToRegionCommand(sublime_plugin.TextCommand):
 
 	def run(self, edit, start, end):
 		# Checking? try/except
-		region = sublime.Region(long(start), long(end))
+		region = sublime.Region(start, end)
 		if not region:
 			print "JumpToRegion: Bad region!"
 			return
